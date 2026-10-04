@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# mw909 — classic hybrid drum machine emulation. Copyright (C) 2026 mwAudio.
+#
+# Golden pattern: kick, snare, clap and hats with the TOTAL ACCENT row and the
+# instrument accents a hardware pattern can hold, at the hardware's shuffle
+# key 3 (4 ticks).
+tempo    150
+pattern  I-1-1
+name     golden basic
+length   16
+scale    16
+shufflekey 3
+BD  X--- ---- x-x- ----
+SD  ---- X--- ---- x---
+LT  ---- ---- ---- --x-
+CH  x-x- X-x- x-x- x---
+OH  ---- ---- ---- --x-
+CP  ---- ---- ---- x---
+AC  x--- ---- x--- ----

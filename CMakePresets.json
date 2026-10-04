@@ -1,0 +1,169 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    },
+    {
+      "name": "asan-flags",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_FLAGS": "-fsanitize=address,undefined -fno-omit-frame-pointer -fno-sanitize-recover=undefined -g",
+        "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -fno-omit-frame-pointer -fno-sanitize-recover=undefined -g",
+        "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address,undefined",
+        "CMAKE_SHARED_LINKER_FLAGS": "-fsanitize=address,undefined",
+        "CMAKE_MODULE_LINKER_FLAGS": "-fsanitize=address,undefined"
+      }
+    },
+    {
+      "name": "tsan-flags",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_FLAGS": "-fsanitize=thread -fno-omit-frame-pointer -g -O1",
+        "CMAKE_CXX_FLAGS": "-fsanitize=thread -fno-omit-frame-pointer -g -O1",
+        "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=thread",
+        "CMAKE_SHARED_LINKER_FLAGS": "-fsanitize=thread",
+        "CMAKE_MODULE_LINKER_FLAGS": "-fsanitize=thread",
+        "CMAKE_CROSSCOMPILING_EMULATOR": "setarch;-R"
+      }
+    },
+    {
+      "name": "linux-release",
+      "inherits": "base",
+      "displayName": "Linux Release (Ninja)",
+      "description": "The definition-of-done build: optimised (-O3, LTO on the plugin targets). Use it for installs (tools/install-user.sh), benchmarks (mw909-render bench), goldens and validators.",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    },
+    {
+      "name": "linux-default",
+      "inherits": "base",
+      "displayName": "Linux development (RelWithDebInfo, Ninja)",
+      "description": "Day-to-day development build with debug info.",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo" }
+    },
+    {
+      "name": "asan",
+      "inherits": ["base", "asan-flags"],
+      "displayName": "AddressSanitizer + UBSan (core, tools, tests; no plugin)",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "MW909_BUILD_PLUGIN": "OFF" }
+    },
+    {
+      "name": "tsan",
+      "inherits": ["base", "tsan-flags"],
+      "displayName": "ThreadSanitizer (core, tools, tests; no plugin)",
+      "description": "Tests and Catch2 discovery run under `setarch -R` (CMAKE_CROSSCOMPILING_EMULATOR): TSan cannot map its shadow memory with this kernel's ASLR.",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "MW909_BUILD_PLUGIN": "OFF" }
+    },
+    {
+      "name": "asan-plugin",
+      "inherits": ["base", "asan-flags"],
+      "displayName": "AddressSanitizer + UBSan with the plugin (plugin tests, stress, UI tool)",
+      "description": "JUCE, the plugin shell and tests/plugin built under ASan + UBSan (Debug: JUCE's own assertions and leak detector on). The artefacts are sanitizer builds: hosts and validators cannot load them.",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "MW909_BUILD_PLUGIN": "ON" }
+    },
+    {
+      "name": "tsan-plugin",
+      "inherits": ["base", "tsan-flags"],
+      "displayName": "ThreadSanitizer with the plugin (plugin tests, stress, UI tool)",
+      "description": "JUCE, the plugin shell and tests/plugin built under TSan; tests run under `setarch -R`. The artefacts are sanitizer builds: hosts and validators cannot load them.",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "MW909_BUILD_PLUGIN": "ON" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "linux-release", "configurePreset": "linux-release" },
+    { "name": "linux-default", "configurePreset": "linux-default" },
+    { "name": "asan", "configurePreset": "asan" },
+    { "name": "tsan", "configurePreset": "tsan" },
+    { "name": "asan-plugin", "configurePreset": "asan-plugin" },
+    { "name": "tsan-plugin", "configurePreset": "tsan-plugin" }
+  ],
+  "testPresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "output": { "outputOnFailure": true },
+      "execution": { "noTestsAction": "error" }
+    },
+    {
+      "name": "asan-env",
+      "hidden": true,
+      "environment": {
+        "ASAN_OPTIONS": "detect_leaks=1:abort_on_error=1",
+        "UBSAN_OPTIONS": "print_stacktrace=1:halt_on_error=1"
+      }
+    },
+    {
+      "name": "tsan-env",
+      "hidden": true,
+      "environment": { "TSAN_OPTIONS": "halt_on_error=1:second_deadlock_stack=1:history_size=4:suppressions=${sourceDir}/tools/sanitizers/tsan-suppressions.txt" }
+    },
+    { "name": "linux-release", "inherits": "base", "configurePreset": "linux-release" },
+    { "name": "linux-default", "inherits": "base", "configurePreset": "linux-default" },
+    {
+      "name": "asan",
+      "inherits": ["base", "asan-env"],
+      "configurePreset": "asan",
+      "filter": { "exclude": { "label": "validators" } }
+    },
+    {
+      "name": "tsan",
+      "inherits": ["base", "tsan-env"],
+      "configurePreset": "tsan",
+      "filter": { "exclude": { "label": "validators" } }
+    },
+    {
+      "name": "asan-plugin",
+      "inherits": ["base", "asan-env"],
+      "displayName": "Everything but the validators, under ASan + UBSan, plugin included",
+      "configurePreset": "asan-plugin",
+      "filter": { "exclude": { "label": "validators" } }
+    },
+    {
+      "name": "asan-plugin-dod",
+      "inherits": ["base", "asan-env"],
+      "displayName": "DoD: the plugin tests and the 30 s stress test under ASan + UBSan",
+      "configurePreset": "asan-plugin",
+      "filter": { "include": { "name": "^(plugin:|stress:)" } }
+    },
+    {
+      "name": "tsan-plugin",
+      "inherits": ["base", "tsan-env"],
+      "displayName": "Everything but the validators, under TSan, plugin included",
+      "configurePreset": "tsan-plugin",
+      "filter": { "exclude": { "label": "validators" } }
+    },
+    {
+      "name": "tsan-plugin-dod",
+      "inherits": ["base", "tsan-env"],
+      "displayName": "DoD: the plugin tests and the 30 s stress test under TSan",
+      "configurePreset": "tsan-plugin",
+      "filter": { "include": { "name": "^(plugin:|stress:)" } }
+    },
+    {
+      "name": "golden",
+      "inherits": "base",
+      "displayName": "Golden renders only (linux-release)",
+      "configurePreset": "linux-release",
+      "filter": { "include": { "label": "golden" } }
+    },
+    {
+      "name": "hygiene",
+      "inherits": "base",
+      "displayName": "Licence headers and branding audit (linux-release)",
+      "configurePreset": "linux-release",
+      "filter": { "include": { "label": "hygiene" } }
+    },
+    {
+      "name": "validators",
+      "inherits": "base",
+      "displayName": "Format validators only (linux-release; exit 77 = skipped)",
+      "configurePreset": "linux-release",
+      "filter": { "include": { "label": "validators" } }
+    }
+  ]
+}

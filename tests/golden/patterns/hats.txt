@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# mw909 — classic hybrid drum machine emulation. Copyright (C) 2026 mwAudio.
+#
+# Golden pattern: the one hat circuit. The open hat rings and the next closed
+# hit chokes it; CH and OH on the same step play open; a ride and a crash
+# under it (the shared CR/RD accent DAC: their accents differ per hit).
+tempo    140
+pattern  I-1-1
+name     golden hats
+length   16
+scale    16
+CH  x--- x-x- ---- x-xX
+OH  --x- ---x x--- --x-
+RD  x-x- x-x- X-x- x-x-
+CR  x--- ---- ---- ----
+AC  ---- ---- x--- ----

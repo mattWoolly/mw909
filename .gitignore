@@ -1,0 +1,41 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# mw909 — classic hybrid drum machine emulation. Copyright (C) 2026 mwAudio.
+
+# Build trees (every preset builds under build/<preset>), validator downloads
+# (build/validator-tools/) and the seeded pluginval (build/tools/).
+build/
+cmake-build-*/
+out/
+_deps/
+CMakeUserPresets.json
+compile_commands.json
+
+# Third-party checkouts used by cmake/Deps.cmake.
+.deps/
+
+# Built artefacts that might land outside build/.
+*.o
+*.a
+*.so
+*.vst3
+*.clap
+*.lv2/
+
+# Renders and exports from mw909-render. The blessed golden references are the
+# exception and are committed.
+renders/
+stems/
+*.wav
+*.mid
+!tests/golden/blessed/*.wav
+
+# Validator and tool caches outside build/.
+validator-tools/
+.cache/
+
+# Editors and OS.
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store

@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# mw909 — classic hybrid drum machine emulation. Copyright (C) 2026 mwAudio.
+#
+# Golden song: three patterns of different length and scale walked by song
+# track 1 (TRACK PLAY) and by the live chain, so the measure walk has to
+# follow each pattern's own length.
+tempo    150
+pattern  I-1-1
+name     song a
+length   16
+scale    16
+BD  x--- x--- x--- x---
+CH  --x- --x- --x- --x-
+SD  ---- x--- ---- x---
+pattern  I-1-2
+name     song b triplets
+length   12
+scale    8t
+BD  x--x --x- -x--
+OH  -x-- x--x --x-
+CP  ---- --x- ----
+pattern  I-1-3
+name     song c thirty-seconds
+length   16
+scale    32
+BD  x--- ---- x--- ----
+CH  xxxx xxxx xxXx xxxx
+HT  ---- ---- ---- x-x-
+song 1   I-1-1 I-1-2*2 I-1-3 I-1-1
+chain    I-1-3 I-1-1

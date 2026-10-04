@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# mw909 — classic hybrid drum machine emulation. Copyright (C) 2026 mwAudio.
+#
+# ThreadSanitizer suppressions for the tsan / tsan-plugin test presets
+# (TSAN_OPTIONS=suppressions=... in CMakePresets.json). Third-party system
+# libraries only: every entry names one library and matches only reports
+# with a frame inside it. Nothing of mw909's, JUCE's or Catch2's is here.
+#
+# libpulsecommon (the system PulseAudio client library, uninstrumented): the
+# Standalone's ALSA device goes through the PulseAudio ALSA plugin, whose
+# mainloop thread locks a pa_mutex that the opening thread allocated with
+# pa_xmalloc. PulseAudio hands the object to its thread through its own
+# atomics, which TSan cannot see in an uninstrumented library, so the first
+# pthread_mutex_lock looks like a race with the malloc. Seen in
+# "host-smoke: Standalone starts and quits cleanly".
+race:libpulsecommon-*.so

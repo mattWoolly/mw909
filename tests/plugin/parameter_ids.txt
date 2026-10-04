@@ -1,0 +1,615 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# mw909 — classic hybrid drum machine emulation. Copyright (C) 2026 mwAudio.
+#
+# The frozen parameter layout (docs/design/plugin.md §2): index | id | name | kind |
+# range | default | grid | unit | automatable | choices | two points of the curve.
+# Ids never change once shipped. Regenerate with MW909_UPDATE_PARAMETER_SNAPSHOT=1
+# only to ADD parameters, and review the diff.
+0 | bd_tune | BD Tune | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+1 | bd_attack | BD Attack | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+2 | bd_decay | BD Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+3 | bd_pitch | BD Pitch | float | -12 .. 12 | default 0 | step 0.00999999978 | st | auto | n.25 -6 n.5 0
+4 | bd_depth | BD Tune Depth | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+5 | bd_drive | BD Shaper | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+6 | bd_level | BD Level | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+7 | bd_pan | BD Pan | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+8 | bd_spread | BD Spread | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+9 | bd_ch_drive | BD Drive | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+10 | bd_mute | BD Mute | bool | 0 .. 1 | default 0 | step 1 |  | auto
+11 | bd_solo | BD Solo | bool | 0 .. 1 | default 0 | step 1 |  | auto
+12 | bd_out | BD Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+13 | bd_route | BD Route | choice | 0 .. 2 | default 0 | step 1 |  | auto | Output,FX 1,FX 2
+14 | bd_send_bus | BD Send Bus | choice | 0 .. 2 | default 0 | step 1 |  | auto | Off,FX 1,FX 2
+15 | bd_send | BD Send | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+16 | bd_send_pre | BD Send Pre | bool | 0 .. 1 | default 0 | step 1 |  | auto
+17 | bd_eq_on | BD EQ On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+18 | bd_lowcut | BD Low Cut | float | 20 .. 2000 | default 20 | step 0.100000001 | Hz | auto | n.25 63.2000008 n.5 200
+19 | bd_highcut | BD High Cut | float | 500 .. 20000 | default 20000 | step 1 | Hz | auto | n.25 1257 n.5 3162
+20 | bd_reso | BD Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+21 | bd_eq1_on | BD EQ1 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+22 | bd_eq1_freq | BD EQ1 Freq | float | 20 .. 20000 | default 200 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+23 | bd_eq1_width | BD EQ1 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+24 | bd_eq1_gain | BD EQ1 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+25 | bd_eq2_on | BD EQ2 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+26 | bd_eq2_freq | BD EQ2 Freq | float | 20 .. 20000 | default 3000 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+27 | bd_eq2_width | BD EQ2 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+28 | bd_eq2_gain | BD EQ2 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+29 | bd_comp_on | BD Comp On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+30 | bd_comp_pre | BD Comp Pre EQ | bool | 0 .. 1 | default 0 | step 1 |  | auto
+31 | bd_comp_thresh | BD Comp Threshold | float | -48 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+32 | bd_comp_ratio | BD Comp Ratio | float | 1 .. 20 | default 4 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+33 | bd_comp_attack | BD Comp Attack | float | 1 .. 500 | default 10 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+34 | bd_comp_release | BD Comp Release | float | 1 .. 500 | default 100 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+35 | bd_comp_makeup | BD Comp Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+36 | sd_tune | SD Tune | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+37 | sd_tone | SD Tone | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+38 | sd_snappy | SD Snappy | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+39 | sd_decay | SD Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+40 | sd_depth | SD Tune Depth | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+41 | sd_level | SD Level | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+42 | sd_pan | SD Pan | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+43 | sd_spread | SD Spread | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+44 | sd_ch_drive | SD Drive | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+45 | sd_mute | SD Mute | bool | 0 .. 1 | default 0 | step 1 |  | auto
+46 | sd_solo | SD Solo | bool | 0 .. 1 | default 0 | step 1 |  | auto
+47 | sd_out | SD Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+48 | sd_route | SD Route | choice | 0 .. 2 | default 0 | step 1 |  | auto | Output,FX 1,FX 2
+49 | sd_send_bus | SD Send Bus | choice | 0 .. 2 | default 0 | step 1 |  | auto | Off,FX 1,FX 2
+50 | sd_send | SD Send | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+51 | sd_send_pre | SD Send Pre | bool | 0 .. 1 | default 0 | step 1 |  | auto
+52 | sd_eq_on | SD EQ On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+53 | sd_lowcut | SD Low Cut | float | 20 .. 2000 | default 20 | step 0.100000001 | Hz | auto | n.25 63.2000008 n.5 200
+54 | sd_highcut | SD High Cut | float | 500 .. 20000 | default 20000 | step 1 | Hz | auto | n.25 1257 n.5 3162
+55 | sd_reso | SD Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+56 | sd_eq1_on | SD EQ1 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+57 | sd_eq1_freq | SD EQ1 Freq | float | 20 .. 20000 | default 200 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+58 | sd_eq1_width | SD EQ1 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+59 | sd_eq1_gain | SD EQ1 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+60 | sd_eq2_on | SD EQ2 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+61 | sd_eq2_freq | SD EQ2 Freq | float | 20 .. 20000 | default 3000 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+62 | sd_eq2_width | SD EQ2 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+63 | sd_eq2_gain | SD EQ2 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+64 | sd_comp_on | SD Comp On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+65 | sd_comp_pre | SD Comp Pre EQ | bool | 0 .. 1 | default 0 | step 1 |  | auto
+66 | sd_comp_thresh | SD Comp Threshold | float | -48 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+67 | sd_comp_ratio | SD Comp Ratio | float | 1 .. 20 | default 4 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+68 | sd_comp_attack | SD Comp Attack | float | 1 .. 500 | default 10 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+69 | sd_comp_release | SD Comp Release | float | 1 .. 500 | default 100 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+70 | sd_comp_makeup | SD Comp Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+71 | lt_tune | LT Tune | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+72 | lt_decay | LT Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+73 | lt_depth | LT Tune Depth | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+74 | lt_sweep | LT Tune Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+75 | lt_noise | LT Noise | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+76 | lt_level | LT Level | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+77 | lt_pan | LT Pan | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+78 | lt_spread | LT Spread | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+79 | lt_ch_drive | LT Drive | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+80 | lt_mute | LT Mute | bool | 0 .. 1 | default 0 | step 1 |  | auto
+81 | lt_solo | LT Solo | bool | 0 .. 1 | default 0 | step 1 |  | auto
+82 | lt_out | LT Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+83 | lt_route | LT Route | choice | 0 .. 2 | default 0 | step 1 |  | auto | Output,FX 1,FX 2
+84 | lt_send_bus | LT Send Bus | choice | 0 .. 2 | default 0 | step 1 |  | auto | Off,FX 1,FX 2
+85 | lt_send | LT Send | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+86 | lt_send_pre | LT Send Pre | bool | 0 .. 1 | default 0 | step 1 |  | auto
+87 | lt_eq_on | LT EQ On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+88 | lt_lowcut | LT Low Cut | float | 20 .. 2000 | default 20 | step 0.100000001 | Hz | auto | n.25 63.2000008 n.5 200
+89 | lt_highcut | LT High Cut | float | 500 .. 20000 | default 20000 | step 1 | Hz | auto | n.25 1257 n.5 3162
+90 | lt_reso | LT Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+91 | lt_eq1_on | LT EQ1 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+92 | lt_eq1_freq | LT EQ1 Freq | float | 20 .. 20000 | default 200 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+93 | lt_eq1_width | LT EQ1 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+94 | lt_eq1_gain | LT EQ1 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+95 | lt_eq2_on | LT EQ2 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+96 | lt_eq2_freq | LT EQ2 Freq | float | 20 .. 20000 | default 3000 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+97 | lt_eq2_width | LT EQ2 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+98 | lt_eq2_gain | LT EQ2 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+99 | lt_comp_on | LT Comp On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+100 | lt_comp_pre | LT Comp Pre EQ | bool | 0 .. 1 | default 0 | step 1 |  | auto
+101 | lt_comp_thresh | LT Comp Threshold | float | -48 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+102 | lt_comp_ratio | LT Comp Ratio | float | 1 .. 20 | default 4 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+103 | lt_comp_attack | LT Comp Attack | float | 1 .. 500 | default 10 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+104 | lt_comp_release | LT Comp Release | float | 1 .. 500 | default 100 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+105 | lt_comp_makeup | LT Comp Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+106 | mt_tune | MT Tune | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+107 | mt_decay | MT Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+108 | mt_depth | MT Tune Depth | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+109 | mt_sweep | MT Tune Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+110 | mt_noise | MT Noise | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+111 | mt_level | MT Level | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+112 | mt_pan | MT Pan | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+113 | mt_spread | MT Spread | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+114 | mt_ch_drive | MT Drive | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+115 | mt_mute | MT Mute | bool | 0 .. 1 | default 0 | step 1 |  | auto
+116 | mt_solo | MT Solo | bool | 0 .. 1 | default 0 | step 1 |  | auto
+117 | mt_out | MT Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+118 | mt_route | MT Route | choice | 0 .. 2 | default 0 | step 1 |  | auto | Output,FX 1,FX 2
+119 | mt_send_bus | MT Send Bus | choice | 0 .. 2 | default 0 | step 1 |  | auto | Off,FX 1,FX 2
+120 | mt_send | MT Send | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+121 | mt_send_pre | MT Send Pre | bool | 0 .. 1 | default 0 | step 1 |  | auto
+122 | mt_eq_on | MT EQ On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+123 | mt_lowcut | MT Low Cut | float | 20 .. 2000 | default 20 | step 0.100000001 | Hz | auto | n.25 63.2000008 n.5 200
+124 | mt_highcut | MT High Cut | float | 500 .. 20000 | default 20000 | step 1 | Hz | auto | n.25 1257 n.5 3162
+125 | mt_reso | MT Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+126 | mt_eq1_on | MT EQ1 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+127 | mt_eq1_freq | MT EQ1 Freq | float | 20 .. 20000 | default 200 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+128 | mt_eq1_width | MT EQ1 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+129 | mt_eq1_gain | MT EQ1 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+130 | mt_eq2_on | MT EQ2 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+131 | mt_eq2_freq | MT EQ2 Freq | float | 20 .. 20000 | default 3000 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+132 | mt_eq2_width | MT EQ2 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+133 | mt_eq2_gain | MT EQ2 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+134 | mt_comp_on | MT Comp On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+135 | mt_comp_pre | MT Comp Pre EQ | bool | 0 .. 1 | default 0 | step 1 |  | auto
+136 | mt_comp_thresh | MT Comp Threshold | float | -48 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+137 | mt_comp_ratio | MT Comp Ratio | float | 1 .. 20 | default 4 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+138 | mt_comp_attack | MT Comp Attack | float | 1 .. 500 | default 10 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+139 | mt_comp_release | MT Comp Release | float | 1 .. 500 | default 100 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+140 | mt_comp_makeup | MT Comp Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+141 | ht_tune | HT Tune | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+142 | ht_decay | HT Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+143 | ht_depth | HT Tune Depth | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+144 | ht_sweep | HT Tune Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+145 | ht_noise | HT Noise | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+146 | ht_level | HT Level | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+147 | ht_pan | HT Pan | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+148 | ht_spread | HT Spread | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+149 | ht_ch_drive | HT Drive | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+150 | ht_mute | HT Mute | bool | 0 .. 1 | default 0 | step 1 |  | auto
+151 | ht_solo | HT Solo | bool | 0 .. 1 | default 0 | step 1 |  | auto
+152 | ht_out | HT Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+153 | ht_route | HT Route | choice | 0 .. 2 | default 0 | step 1 |  | auto | Output,FX 1,FX 2
+154 | ht_send_bus | HT Send Bus | choice | 0 .. 2 | default 0 | step 1 |  | auto | Off,FX 1,FX 2
+155 | ht_send | HT Send | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+156 | ht_send_pre | HT Send Pre | bool | 0 .. 1 | default 0 | step 1 |  | auto
+157 | ht_eq_on | HT EQ On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+158 | ht_lowcut | HT Low Cut | float | 20 .. 2000 | default 20 | step 0.100000001 | Hz | auto | n.25 63.2000008 n.5 200
+159 | ht_highcut | HT High Cut | float | 500 .. 20000 | default 20000 | step 1 | Hz | auto | n.25 1257 n.5 3162
+160 | ht_reso | HT Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+161 | ht_eq1_on | HT EQ1 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+162 | ht_eq1_freq | HT EQ1 Freq | float | 20 .. 20000 | default 200 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+163 | ht_eq1_width | HT EQ1 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+164 | ht_eq1_gain | HT EQ1 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+165 | ht_eq2_on | HT EQ2 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+166 | ht_eq2_freq | HT EQ2 Freq | float | 20 .. 20000 | default 3000 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+167 | ht_eq2_width | HT EQ2 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+168 | ht_eq2_gain | HT EQ2 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+169 | ht_comp_on | HT Comp On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+170 | ht_comp_pre | HT Comp Pre EQ | bool | 0 .. 1 | default 0 | step 1 |  | auto
+171 | ht_comp_thresh | HT Comp Threshold | float | -48 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+172 | ht_comp_ratio | HT Comp Ratio | float | 1 .. 20 | default 4 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+173 | ht_comp_attack | HT Comp Attack | float | 1 .. 500 | default 10 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+174 | ht_comp_release | HT Comp Release | float | 1 .. 500 | default 100 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+175 | ht_comp_makeup | HT Comp Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+176 | rs_tune | RS Tune | float | -12 .. 12 | default 0 | step 0.00999999978 | st | auto | n.25 -6 n.5 0
+177 | rs_decay | RS Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+178 | rs_level | RS Level | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+179 | rs_pan | RS Pan | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+180 | rs_spread | RS Spread | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+181 | rs_ch_drive | RS Drive | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+182 | rs_mute | RS Mute | bool | 0 .. 1 | default 0 | step 1 |  | auto
+183 | rs_solo | RS Solo | bool | 0 .. 1 | default 0 | step 1 |  | auto
+184 | rs_out | RS Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+185 | rs_route | RS Route | choice | 0 .. 2 | default 0 | step 1 |  | auto | Output,FX 1,FX 2
+186 | rs_send_bus | RS Send Bus | choice | 0 .. 2 | default 0 | step 1 |  | auto | Off,FX 1,FX 2
+187 | rs_send | RS Send | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+188 | rs_send_pre | RS Send Pre | bool | 0 .. 1 | default 0 | step 1 |  | auto
+189 | rs_eq_on | RS EQ On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+190 | rs_lowcut | RS Low Cut | float | 20 .. 2000 | default 20 | step 0.100000001 | Hz | auto | n.25 63.2000008 n.5 200
+191 | rs_highcut | RS High Cut | float | 500 .. 20000 | default 20000 | step 1 | Hz | auto | n.25 1257 n.5 3162
+192 | rs_reso | RS Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+193 | rs_eq1_on | RS EQ1 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+194 | rs_eq1_freq | RS EQ1 Freq | float | 20 .. 20000 | default 200 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+195 | rs_eq1_width | RS EQ1 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+196 | rs_eq1_gain | RS EQ1 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+197 | rs_eq2_on | RS EQ2 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+198 | rs_eq2_freq | RS EQ2 Freq | float | 20 .. 20000 | default 3000 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+199 | rs_eq2_width | RS EQ2 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+200 | rs_eq2_gain | RS EQ2 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+201 | rs_comp_on | RS Comp On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+202 | rs_comp_pre | RS Comp Pre EQ | bool | 0 .. 1 | default 0 | step 1 |  | auto
+203 | rs_comp_thresh | RS Comp Threshold | float | -48 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+204 | rs_comp_ratio | RS Comp Ratio | float | 1 .. 20 | default 4 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+205 | rs_comp_attack | RS Comp Attack | float | 1 .. 500 | default 10 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+206 | rs_comp_release | RS Comp Release | float | 1 .. 500 | default 100 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+207 | rs_comp_makeup | RS Comp Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+208 | cp_tune | CP Tune | float | -12 .. 12 | default 0 | step 0.00999999978 | st | auto | n.25 -6 n.5 0
+209 | cp_decay | CP Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+210 | cp_reverb | CP Reverb | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+211 | cp_level | CP Level | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+212 | cp_pan | CP Pan | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+213 | cp_spread | CP Spread | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+214 | cp_ch_drive | CP Drive | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+215 | cp_mute | CP Mute | bool | 0 .. 1 | default 0 | step 1 |  | auto
+216 | cp_solo | CP Solo | bool | 0 .. 1 | default 0 | step 1 |  | auto
+217 | cp_out | CP Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+218 | cp_route | CP Route | choice | 0 .. 2 | default 0 | step 1 |  | auto | Output,FX 1,FX 2
+219 | cp_send_bus | CP Send Bus | choice | 0 .. 2 | default 0 | step 1 |  | auto | Off,FX 1,FX 2
+220 | cp_send | CP Send | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+221 | cp_send_pre | CP Send Pre | bool | 0 .. 1 | default 0 | step 1 |  | auto
+222 | cp_eq_on | CP EQ On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+223 | cp_lowcut | CP Low Cut | float | 20 .. 2000 | default 20 | step 0.100000001 | Hz | auto | n.25 63.2000008 n.5 200
+224 | cp_highcut | CP High Cut | float | 500 .. 20000 | default 20000 | step 1 | Hz | auto | n.25 1257 n.5 3162
+225 | cp_reso | CP Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+226 | cp_eq1_on | CP EQ1 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+227 | cp_eq1_freq | CP EQ1 Freq | float | 20 .. 20000 | default 200 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+228 | cp_eq1_width | CP EQ1 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+229 | cp_eq1_gain | CP EQ1 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+230 | cp_eq2_on | CP EQ2 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+231 | cp_eq2_freq | CP EQ2 Freq | float | 20 .. 20000 | default 3000 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+232 | cp_eq2_width | CP EQ2 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+233 | cp_eq2_gain | CP EQ2 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+234 | cp_comp_on | CP Comp On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+235 | cp_comp_pre | CP Comp Pre EQ | bool | 0 .. 1 | default 0 | step 1 |  | auto
+236 | cp_comp_thresh | CP Comp Threshold | float | -48 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+237 | cp_comp_ratio | CP Comp Ratio | float | 1 .. 20 | default 4 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+238 | cp_comp_attack | CP Comp Attack | float | 1 .. 500 | default 10 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+239 | cp_comp_release | CP Comp Release | float | 1 .. 500 | default 100 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+240 | cp_comp_makeup | CP Comp Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+241 | ch_tune | CH Tune | float | -12 .. 12 | default 0 | step 0.00999999978 | st | auto | n.25 -6 n.5 0
+242 | ch_decay | CH Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+243 | ch_source | CH Source | choice | 0 .. 2 | default 0 | step 1 |  | auto | ROM,Synth,User
+244 | ch_color | CH Color | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+245 | ch_density | CH Density | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+246 | ch_level | CH Level | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+247 | ch_pan | CH Pan | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+248 | ch_spread | CH Spread | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+249 | ch_ch_drive | CH Drive | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+250 | ch_mute | CH Mute | bool | 0 .. 1 | default 0 | step 1 |  | auto
+251 | ch_solo | CH Solo | bool | 0 .. 1 | default 0 | step 1 |  | auto
+252 | ch_out | CH Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+253 | ch_route | CH Route | choice | 0 .. 2 | default 0 | step 1 |  | auto | Output,FX 1,FX 2
+254 | ch_send_bus | CH Send Bus | choice | 0 .. 2 | default 0 | step 1 |  | auto | Off,FX 1,FX 2
+255 | ch_send | CH Send | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+256 | ch_send_pre | CH Send Pre | bool | 0 .. 1 | default 0 | step 1 |  | auto
+257 | ch_eq_on | CH EQ On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+258 | ch_lowcut | CH Low Cut | float | 20 .. 2000 | default 20 | step 0.100000001 | Hz | auto | n.25 63.2000008 n.5 200
+259 | ch_highcut | CH High Cut | float | 500 .. 20000 | default 20000 | step 1 | Hz | auto | n.25 1257 n.5 3162
+260 | ch_reso | CH Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+261 | ch_eq1_on | CH EQ1 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+262 | ch_eq1_freq | CH EQ1 Freq | float | 20 .. 20000 | default 200 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+263 | ch_eq1_width | CH EQ1 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+264 | ch_eq1_gain | CH EQ1 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+265 | ch_eq2_on | CH EQ2 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+266 | ch_eq2_freq | CH EQ2 Freq | float | 20 .. 20000 | default 3000 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+267 | ch_eq2_width | CH EQ2 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+268 | ch_eq2_gain | CH EQ2 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+269 | ch_comp_on | CH Comp On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+270 | ch_comp_pre | CH Comp Pre EQ | bool | 0 .. 1 | default 0 | step 1 |  | auto
+271 | ch_comp_thresh | CH Comp Threshold | float | -48 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+272 | ch_comp_ratio | CH Comp Ratio | float | 1 .. 20 | default 4 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+273 | ch_comp_attack | CH Comp Attack | float | 1 .. 500 | default 10 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+274 | ch_comp_release | CH Comp Release | float | 1 .. 500 | default 100 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+275 | ch_comp_makeup | CH Comp Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+276 | oh_tune | OH Tune | float | -12 .. 12 | default 0 | step 0.00999999978 | st | auto | n.25 -6 n.5 0
+277 | oh_decay | OH Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+278 | oh_source | OH Source | choice | 0 .. 2 | default 0 | step 1 |  | auto | ROM,Synth,User
+279 | oh_color | OH Color | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+280 | oh_density | OH Density | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+281 | oh_level | OH Level | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+282 | oh_pan | OH Pan | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+283 | oh_spread | OH Spread | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+284 | oh_ch_drive | OH Drive | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+285 | oh_mute | OH Mute | bool | 0 .. 1 | default 0 | step 1 |  | auto
+286 | oh_solo | OH Solo | bool | 0 .. 1 | default 0 | step 1 |  | auto
+287 | oh_out | OH Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+288 | oh_route | OH Route | choice | 0 .. 2 | default 0 | step 1 |  | auto | Output,FX 1,FX 2
+289 | oh_send_bus | OH Send Bus | choice | 0 .. 2 | default 0 | step 1 |  | auto | Off,FX 1,FX 2
+290 | oh_send | OH Send | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+291 | oh_send_pre | OH Send Pre | bool | 0 .. 1 | default 0 | step 1 |  | auto
+292 | oh_eq_on | OH EQ On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+293 | oh_lowcut | OH Low Cut | float | 20 .. 2000 | default 20 | step 0.100000001 | Hz | auto | n.25 63.2000008 n.5 200
+294 | oh_highcut | OH High Cut | float | 500 .. 20000 | default 20000 | step 1 | Hz | auto | n.25 1257 n.5 3162
+295 | oh_reso | OH Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+296 | oh_eq1_on | OH EQ1 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+297 | oh_eq1_freq | OH EQ1 Freq | float | 20 .. 20000 | default 200 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+298 | oh_eq1_width | OH EQ1 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+299 | oh_eq1_gain | OH EQ1 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+300 | oh_eq2_on | OH EQ2 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+301 | oh_eq2_freq | OH EQ2 Freq | float | 20 .. 20000 | default 3000 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+302 | oh_eq2_width | OH EQ2 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+303 | oh_eq2_gain | OH EQ2 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+304 | oh_comp_on | OH Comp On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+305 | oh_comp_pre | OH Comp Pre EQ | bool | 0 .. 1 | default 0 | step 1 |  | auto
+306 | oh_comp_thresh | OH Comp Threshold | float | -48 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+307 | oh_comp_ratio | OH Comp Ratio | float | 1 .. 20 | default 4 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+308 | oh_comp_attack | OH Comp Attack | float | 1 .. 500 | default 10 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+309 | oh_comp_release | OH Comp Release | float | 1 .. 500 | default 100 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+310 | oh_comp_makeup | OH Comp Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+311 | cr_tune | CR Tune | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+312 | cr_decay | CR Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+313 | cr_source | CR Source | choice | 0 .. 2 | default 0 | step 1 |  | auto | ROM,Synth,User
+314 | cr_color | CR Color | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+315 | cr_density | CR Density | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+316 | cr_level | CR Level | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+317 | cr_pan | CR Pan | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+318 | cr_spread | CR Spread | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+319 | cr_ch_drive | CR Drive | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+320 | cr_mute | CR Mute | bool | 0 .. 1 | default 0 | step 1 |  | auto
+321 | cr_solo | CR Solo | bool | 0 .. 1 | default 0 | step 1 |  | auto
+322 | cr_out | CR Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+323 | cr_route | CR Route | choice | 0 .. 2 | default 0 | step 1 |  | auto | Output,FX 1,FX 2
+324 | cr_send_bus | CR Send Bus | choice | 0 .. 2 | default 0 | step 1 |  | auto | Off,FX 1,FX 2
+325 | cr_send | CR Send | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+326 | cr_send_pre | CR Send Pre | bool | 0 .. 1 | default 0 | step 1 |  | auto
+327 | cr_eq_on | CR EQ On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+328 | cr_lowcut | CR Low Cut | float | 20 .. 2000 | default 20 | step 0.100000001 | Hz | auto | n.25 63.2000008 n.5 200
+329 | cr_highcut | CR High Cut | float | 500 .. 20000 | default 20000 | step 1 | Hz | auto | n.25 1257 n.5 3162
+330 | cr_reso | CR Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+331 | cr_eq1_on | CR EQ1 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+332 | cr_eq1_freq | CR EQ1 Freq | float | 20 .. 20000 | default 200 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+333 | cr_eq1_width | CR EQ1 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+334 | cr_eq1_gain | CR EQ1 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+335 | cr_eq2_on | CR EQ2 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+336 | cr_eq2_freq | CR EQ2 Freq | float | 20 .. 20000 | default 3000 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+337 | cr_eq2_width | CR EQ2 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+338 | cr_eq2_gain | CR EQ2 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+339 | cr_comp_on | CR Comp On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+340 | cr_comp_pre | CR Comp Pre EQ | bool | 0 .. 1 | default 0 | step 1 |  | auto
+341 | cr_comp_thresh | CR Comp Threshold | float | -48 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+342 | cr_comp_ratio | CR Comp Ratio | float | 1 .. 20 | default 4 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+343 | cr_comp_attack | CR Comp Attack | float | 1 .. 500 | default 10 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+344 | cr_comp_release | CR Comp Release | float | 1 .. 500 | default 100 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+345 | cr_comp_makeup | CR Comp Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+346 | rd_tune | RD Tune | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+347 | rd_decay | RD Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+348 | rd_source | RD Source | choice | 0 .. 2 | default 0 | step 1 |  | auto | ROM,Synth,User
+349 | rd_color | RD Color | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+350 | rd_density | RD Density | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+351 | rd_level | RD Level | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+352 | rd_pan | RD Pan | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+353 | rd_spread | RD Spread | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+354 | rd_ch_drive | RD Drive | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+355 | rd_mute | RD Mute | bool | 0 .. 1 | default 0 | step 1 |  | auto
+356 | rd_solo | RD Solo | bool | 0 .. 1 | default 0 | step 1 |  | auto
+357 | rd_out | RD Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+358 | rd_route | RD Route | choice | 0 .. 2 | default 0 | step 1 |  | auto | Output,FX 1,FX 2
+359 | rd_send_bus | RD Send Bus | choice | 0 .. 2 | default 0 | step 1 |  | auto | Off,FX 1,FX 2
+360 | rd_send | RD Send | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+361 | rd_send_pre | RD Send Pre | bool | 0 .. 1 | default 0 | step 1 |  | auto
+362 | rd_eq_on | RD EQ On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+363 | rd_lowcut | RD Low Cut | float | 20 .. 2000 | default 20 | step 0.100000001 | Hz | auto | n.25 63.2000008 n.5 200
+364 | rd_highcut | RD High Cut | float | 500 .. 20000 | default 20000 | step 1 | Hz | auto | n.25 1257 n.5 3162
+365 | rd_reso | RD Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+366 | rd_eq1_on | RD EQ1 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+367 | rd_eq1_freq | RD EQ1 Freq | float | 20 .. 20000 | default 200 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+368 | rd_eq1_width | RD EQ1 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+369 | rd_eq1_gain | RD EQ1 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+370 | rd_eq2_on | RD EQ2 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+371 | rd_eq2_freq | RD EQ2 Freq | float | 20 .. 20000 | default 3000 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+372 | rd_eq2_width | RD EQ2 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+373 | rd_eq2_gain | RD EQ2 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+374 | rd_comp_on | RD Comp On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+375 | rd_comp_pre | RD Comp Pre EQ | bool | 0 .. 1 | default 0 | step 1 |  | auto
+376 | rd_comp_thresh | RD Comp Threshold | float | -48 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+377 | rd_comp_ratio | RD Comp Ratio | float | 1 .. 20 | default 4 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+378 | rd_comp_attack | RD Comp Attack | float | 1 .. 500 | default 10 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+379 | rd_comp_release | RD Comp Release | float | 1 .. 500 | default 100 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+380 | rd_comp_makeup | RD Comp Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+381 | fx1_level | FX 1 Level | float | -60 .. 12 | default 0 | step 0.00999999978 | dB | auto | n.25 -42 n.5 -24
+382 | fx2_level | FX 2 Level | float | -60 .. 12 | default 0 | step 0.00999999978 | dB | auto | n.25 -42 n.5 -24
+383 | fx1_out | FX 1 Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+384 | fx2_out | FX 2 Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+385 | fx1_to2 | FX 1 to FX 2 | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+386 | fx1_to2_pre | FX 1 to FX 2 Pre | bool | 0 .. 1 | default 0 | step 1 |  | auto
+387 | fx_dist_on | Distortion On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+388 | fx_dist_bus | Distortion Bus | choice | 0 .. 1 | default 0 | step 1 |  | auto | FX 1,FX 2
+389 | fx_dist_order | Distortion Order | int | 0 .. 9 | default 0 | step 1 |  | auto
+390 | fx_eqa_on | EQ A On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+391 | fx_eqa_bus | EQ A Bus | choice | 0 .. 1 | default 0 | step 1 |  | auto | FX 1,FX 2
+392 | fx_eqa_order | EQ A Order | int | 0 .. 9 | default 1 | step 1 |  | auto
+393 | fx_eqb_on | EQ B On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+394 | fx_eqb_bus | EQ B Bus | choice | 0 .. 1 | default 1 | step 1 |  | auto | FX 1,FX 2
+395 | fx_eqb_order | EQ B Order | int | 0 .. 9 | default 2 | step 1 |  | auto
+396 | fx_delay_on | Delay On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+397 | fx_delay_bus | Delay Bus | choice | 0 .. 1 | default 0 | step 1 |  | auto | FX 1,FX 2
+398 | fx_delay_order | Delay Order | int | 0 .. 9 | default 3 | step 1 |  | auto
+399 | fx_reverb_on | Reverb On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+400 | fx_reverb_bus | Reverb Bus | choice | 0 .. 1 | default 1 | step 1 |  | auto | FX 1,FX 2
+401 | fx_reverb_order | Reverb Order | int | 0 .. 9 | default 4 | step 1 |  | auto
+402 | fx_chorus_on | Chorus On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+403 | fx_chorus_bus | Chorus Bus | choice | 0 .. 1 | default 1 | step 1 |  | auto | FX 1,FX 2
+404 | fx_chorus_order | Chorus Order | int | 0 .. 9 | default 5 | step 1 |  | auto
+405 | fx_crush_on | Bitcrusher On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+406 | fx_crush_bus | Bitcrusher Bus | choice | 0 .. 1 | default 1 | step 1 |  | auto | FX 1,FX 2
+407 | fx_crush_order | Bitcrusher Order | int | 0 .. 9 | default 6 | step 1 |  | auto
+408 | fx_dyna_on | Dynamics A On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+409 | fx_dyna_bus | Dynamics A Bus | choice | 0 .. 1 | default 0 | step 1 |  | auto | FX 1,FX 2
+410 | fx_dyna_order | Dynamics A Order | int | 0 .. 9 | default 7 | step 1 |  | auto
+411 | fx_dynb_on | Dynamics B On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+412 | fx_dynb_bus | Dynamics B Bus | choice | 0 .. 1 | default 1 | step 1 |  | auto | FX 1,FX 2
+413 | fx_dynb_order | Dynamics B Order | int | 0 .. 9 | default 8 | step 1 |  | auto
+414 | fx_filter_on | Filter On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+415 | fx_filter_bus | Filter Bus | choice | 0 .. 1 | default 0 | step 1 |  | auto | FX 1,FX 2
+416 | fx_filter_order | Filter Order | int | 0 .. 9 | default 9 | step 1 |  | auto
+417 | fx_dist_preamp | Distortion Preamp | float | 0 .. 36 | default 0 | step 0.00999999978 | dB | auto | n.25 9 n.5 18
+418 | fx_dist_threshold | Distortion Threshold | float | -36 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -27 n.5 -18
+419 | fx_dist_knee | Distortion Knee | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+420 | fx_dist_split | Distortion Split | float | 0 .. 2000 | default 200 | step 0.100000001 | Hz | auto | n.25 31.2999992 n.5 250
+421 | fx_dist_low_out | Distortion Low Out | float | -60 .. 12 | default 0 | step 0.00999999978 | dB | auto | n.25 -42 n.5 -24
+422 | fx_dist_clip_out | Distortion Clip Out | float | -60 .. 12 | default 0 | step 0.00999999978 | dB | auto | n.25 -42 n.5 -24
+423 | fx_dist_mix | Distortion Mix | float | 0 .. 1 | default 1 | step 0 |  | auto | n.25 0.25 n.5 0.5
+424 | fx_eqa_low_shelf | EQ A Low Shelf | bool | 0 .. 1 | default 0 | step 1 |  | auto
+425 | fx_eqa_low_freq | EQ A Low Freq | float | 20 .. 2000 | default 20 | step 0.100000001 | Hz | auto | n.25 63.2000008 n.5 200
+426 | fx_eqa_low_gain | EQ A Low Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+427 | fx_eqa_low_res | EQ A Low Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+428 | fx_eqa_mid1_on | EQ A Mid 1 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+429 | fx_eqa_mid1_freq | EQ A Mid 1 Freq | float | 20 .. 20000 | default 400 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+430 | fx_eqa_mid1_width | EQ A Mid 1 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+431 | fx_eqa_mid1_gain | EQ A Mid 1 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+432 | fx_eqa_mid2_on | EQ A Mid 2 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+433 | fx_eqa_mid2_freq | EQ A Mid 2 Freq | float | 20 .. 20000 | default 2500 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+434 | fx_eqa_mid2_width | EQ A Mid 2 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+435 | fx_eqa_mid2_gain | EQ A Mid 2 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+436 | fx_eqa_high_shelf | EQ A High Shelf | bool | 0 .. 1 | default 0 | step 1 |  | auto
+437 | fx_eqa_high_freq | EQ A High Freq | float | 500 .. 20000 | default 20000 | step 1 | Hz | auto | n.25 1257 n.5 3162
+438 | fx_eqa_high_gain | EQ A High Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+439 | fx_eqa_high_res | EQ A High Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+440 | fx_eqb_low_shelf | EQ B Low Shelf | bool | 0 .. 1 | default 0 | step 1 |  | auto
+441 | fx_eqb_low_freq | EQ B Low Freq | float | 20 .. 2000 | default 20 | step 0.100000001 | Hz | auto | n.25 63.2000008 n.5 200
+442 | fx_eqb_low_gain | EQ B Low Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+443 | fx_eqb_low_res | EQ B Low Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+444 | fx_eqb_mid1_on | EQ B Mid 1 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+445 | fx_eqb_mid1_freq | EQ B Mid 1 Freq | float | 20 .. 20000 | default 400 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+446 | fx_eqb_mid1_width | EQ B Mid 1 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+447 | fx_eqb_mid1_gain | EQ B Mid 1 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+448 | fx_eqb_mid2_on | EQ B Mid 2 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+449 | fx_eqb_mid2_freq | EQ B Mid 2 Freq | float | 20 .. 20000 | default 2500 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+450 | fx_eqb_mid2_width | EQ B Mid 2 Width | float | 0.5 .. 4 | default 1 | step 0 | oct | auto | n.25 1.375 n.5 2.25
+451 | fx_eqb_mid2_gain | EQ B Mid 2 Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+452 | fx_eqb_high_shelf | EQ B High Shelf | bool | 0 .. 1 | default 0 | step 1 |  | auto
+453 | fx_eqb_high_freq | EQ B High Freq | float | 500 .. 20000 | default 20000 | step 1 | Hz | auto | n.25 1257 n.5 3162
+454 | fx_eqb_high_gain | EQ B High Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+455 | fx_eqb_high_res | EQ B High Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+456 | fx_delay_sync | Delay Sync | bool | 0 .. 1 | default 1 | step 1 |  | auto
+457 | fx_delay_time | Delay Time | float | 1 .. 1000 | default 250 | step 0.00999999978 | ms | auto | n.25 5.61999989 n.5 31.6200008
+458 | fx_delay_div | Delay Division | choice | 0 .. 5 | default 2 | step 1 |  | auto | 1/32,1/16,1/8,1/4,1/2,1/1
+459 | fx_delay_kind | Delay Timing | choice | 0 .. 2 | default 1 | step 1 |  | auto | Straight,Dotted,Triplet
+460 | fx_delay_feedback | Delay Feedback | float | 0 .. 0.980000019 | default 0.349999994 | step 0 |  | auto | n.25 0.245000005 n.5 0.49000001
+461 | fx_delay_spread | Delay Spread | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+462 | fx_delay_loop_filter | Delay Loop Filter | choice | 0 .. 3 | default 0 | step 1 |  | auto | Off,Low Pass,Band Pass,High Pass
+463 | fx_delay_cutoff | Delay Cutoff | float | 20 .. 20000 | default 3000 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+464 | fx_delay_reso | Delay Resonance | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+465 | fx_delay_mix | Delay Mix | float | 0 .. 1 | default 1 | step 0 |  | auto | n.25 0.25 n.5 0.5
+466 | fx_reverb_predelay | Reverb Predelay | float | 0 .. 250 | default 10 | step 0 | ms | auto | n.25 62.5 n.5 125
+467 | fx_reverb_early_size | Reverb Early Size | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+468 | fx_reverb_early_diffusion | Reverb Early Diffusion | float | 0 .. 1 | default 0.600000024 | step 0 |  | auto | n.25 0.25 n.5 0.5
+469 | fx_reverb_early_color | Reverb Early Color | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+470 | fx_reverb_late_size | Reverb Late Size | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+471 | fx_reverb_late_diffusion | Reverb Late Diffusion | float | 0 .. 1 | default 0.699999988 | step 0 |  | auto | n.25 0.25 n.5 0.5
+472 | fx_reverb_late_color | Reverb Late Color | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+473 | fx_reverb_decay | Reverb Decay | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+474 | fx_reverb_modulation | Reverb Modulation | float | 0 .. 1 | default 0.200000003 | step 0 |  | auto | n.25 0.25 n.5 0.5
+475 | fx_reverb_early_late | Reverb Early/Late | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+476 | fx_reverb_mix | Reverb Mix | float | 0 .. 1 | default 1 | step 0 |  | auto | n.25 0.25 n.5 0.5
+477 | fx_chorus_offset | Chorus Offset | float | 1 .. 30 | default 8 | step 0 | ms | auto | n.25 8.25 n.5 15.5
+478 | fx_chorus_depth | Chorus Depth | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+479 | fx_chorus_rate | Chorus Rate | float | 0.0199999996 .. 10 | default 0.5 | step 9.99999975e-05 | Hz | auto | n.25 0.0945999995 n.5 0.4472
+480 | fx_chorus_feedback | Chorus Feedback | float | -0.949999988 .. 0.949999988 | default 0 | step 0 |  | auto | n.25 -0.474999994 n.5 0
+481 | fx_chorus_spatial | Chorus Spatial | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+482 | fx_chorus_low_cut | Chorus Low Cut | float | 20 .. 20000 | default 20 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+483 | fx_chorus_high_cut | Chorus High Cut | float | 20 .. 20000 | default 20000 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+484 | fx_chorus_fatness | Chorus Fatness | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+485 | fx_chorus_gain | Chorus Gain | float | -24 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 -12 n.5 0
+486 | fx_chorus_mix | Chorus Mix | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+487 | fx_crush_bits | Bitcrusher Bits | float | 1 .. 24 | default 16 | step 0 |  | auto | n.25 6.75 n.5 12.5
+488 | fx_crush_dither | Bitcrusher Dither | bool | 0 .. 1 | default 0 | step 1 |  | auto
+489 | fx_crush_rate | Bitcrusher Rate | float | 44 .. 44100 | default 44100 | step 0.100000001 | Hz | auto | n.25 247.600006 n.5 1393
+490 | fx_crush_jitter | Bitcrusher Jitter | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+491 | fx_crush_approx_filter | Bitcrusher Approx Filter | float | 0 .. 1 | default 1 | step 0 |  | auto | n.25 0.25 n.5 0.5
+492 | fx_crush_images_filter | Bitcrusher Images Filter | float | 0 .. 1 | default 1 | step 0 |  | auto | n.25 0.25 n.5 0.5
+493 | fx_crush_mix | Bitcrusher Mix | float | 0 .. 1 | default 1 | step 0 |  | auto | n.25 0.25 n.5 0.5
+494 | fx_dyna_mode | Dynamics A Mode | choice | 0 .. 1 | default 0 | step 1 |  | auto | Compressor,VCA
+495 | fx_dyna_threshold | Dynamics A Threshold | float | -48 .. 0 | default -12 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+496 | fx_dyna_ratio | Dynamics A Ratio | float | 1 .. 20 | default 4 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+497 | fx_dyna_attack | Dynamics A Attack | float | 1 .. 500 | default 5 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+498 | fx_dyna_hold | Dynamics A Hold | float | 0 .. 500 | default 0 | step 0 | ms | auto | n.25 125 n.5 250
+499 | fx_dyna_release | Dynamics A Release | float | 1 .. 500 | default 120 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+500 | fx_dyna_makeup | Dynamics A Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+501 | fx_dyna_sidechain | Dynamics A Sidechain | choice | 0 .. 11 | default 0 | step 1 |  | auto | Off,BD,SD,LT,MT,HT,RS,CP,CH,OH,CR,RD
+502 | fx_dyna_trigger1 | Dynamics A Trigger 1 | choice | 0 .. 11 | default 0 | step 1 |  | auto | Off,BD,SD,LT,MT,HT,RS,CP,CH,OH,CR,RD
+503 | fx_dyna_trigger2 | Dynamics A Trigger 2 | choice | 0 .. 11 | default 0 | step 1 |  | auto | Off,BD,SD,LT,MT,HT,RS,CP,CH,OH,CR,RD
+504 | fx_dyna_trigger3 | Dynamics A Trigger 3 | choice | 0 .. 11 | default 0 | step 1 |  | auto | Off,BD,SD,LT,MT,HT,RS,CP,CH,OH,CR,RD
+505 | fx_dyna_vca_depth | Dynamics A VCA Depth | float | -1 .. 1 | default -1 | step 0 |  | auto | n.25 -0.5 n.5 0
+506 | fx_dyna_mix | Dynamics A Mix | float | 0 .. 1 | default 1 | step 0 |  | auto | n.25 0.25 n.5 0.5
+507 | fx_dynb_mode | Dynamics B Mode | choice | 0 .. 1 | default 0 | step 1 |  | auto | Compressor,VCA
+508 | fx_dynb_threshold | Dynamics B Threshold | float | -48 .. 0 | default -12 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+509 | fx_dynb_ratio | Dynamics B Ratio | float | 1 .. 20 | default 4 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+510 | fx_dynb_attack | Dynamics B Attack | float | 1 .. 500 | default 5 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+511 | fx_dynb_hold | Dynamics B Hold | float | 0 .. 500 | default 0 | step 0 | ms | auto | n.25 125 n.5 250
+512 | fx_dynb_release | Dynamics B Release | float | 1 .. 500 | default 120 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+513 | fx_dynb_makeup | Dynamics B Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+514 | fx_dynb_sidechain | Dynamics B Sidechain | choice | 0 .. 11 | default 0 | step 1 |  | auto | Off,BD,SD,LT,MT,HT,RS,CP,CH,OH,CR,RD
+515 | fx_dynb_trigger1 | Dynamics B Trigger 1 | choice | 0 .. 11 | default 0 | step 1 |  | auto | Off,BD,SD,LT,MT,HT,RS,CP,CH,OH,CR,RD
+516 | fx_dynb_trigger2 | Dynamics B Trigger 2 | choice | 0 .. 11 | default 0 | step 1 |  | auto | Off,BD,SD,LT,MT,HT,RS,CP,CH,OH,CR,RD
+517 | fx_dynb_trigger3 | Dynamics B Trigger 3 | choice | 0 .. 11 | default 0 | step 1 |  | auto | Off,BD,SD,LT,MT,HT,RS,CP,CH,OH,CR,RD
+518 | fx_dynb_vca_depth | Dynamics B VCA Depth | float | -1 .. 1 | default -1 | step 0 |  | auto | n.25 -0.5 n.5 0
+519 | fx_dynb_mix | Dynamics B Mix | float | 0 .. 1 | default 1 | step 0 |  | auto | n.25 0.25 n.5 0.5
+520 | fx_filter_type | Filter Type | choice | 0 .. 3 | default 1 | step 1 |  | auto | Off,Low Pass,Band Pass,High Pass
+521 | fx_filter_cutoff | Filter Cutoff | float | 20 .. 20000 | default 2000 | step 0.100000001 | Hz | auto | n.25 112.5 n.5 632.5
+522 | fx_filter_reso | Filter Resonance | float | 0 .. 1 | default 0.200000003 | step 0 |  | auto | n.25 0.25 n.5 0.5
+523 | fx_filter_source | Filter Mod Source | choice | 0 .. 1 | default 0 | step 1 |  | auto | LFO,Envelope
+524 | fx_filter_lfo_sync | Filter LFO Sync | bool | 0 .. 1 | default 0 | step 1 |  | auto
+525 | fx_filter_lfo_rate | Filter LFO Rate | float | 0.00999999978 .. 20 | default 1 | step 9.99999975e-05 | Hz | auto | n.25 0.0669 n.5 0.4472
+526 | fx_filter_lfo_div | Filter LFO Division | choice | 0 .. 5 | default 3 | step 1 |  | auto | 1/32,1/16,1/8,1/4,1/2,1/1
+527 | fx_filter_lfo_wave | Filter LFO Wave | choice | 0 .. 4 | default 0 | step 1 |  | auto | Sine,Triangle,Saw,Square,Random
+528 | fx_filter_lfo_spread | Filter LFO Spread | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+529 | fx_filter_env_attack | Filter Env Attack | float | 1 .. 500 | default 1 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+530 | fx_filter_env_hold | Filter Env Hold | float | 0 .. 500 | default 0 | step 0 | ms | auto | n.25 125 n.5 250
+531 | fx_filter_env_release | Filter Env Release | float | 1 .. 500 | default 150 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+532 | fx_filter_env_trigger1 | Filter Env Trigger 1 | choice | 0 .. 11 | default 0 | step 1 |  | auto | Off,BD,SD,LT,MT,HT,RS,CP,CH,OH,CR,RD
+533 | fx_filter_env_trigger2 | Filter Env Trigger 2 | choice | 0 .. 11 | default 0 | step 1 |  | auto | Off,BD,SD,LT,MT,HT,RS,CP,CH,OH,CR,RD
+534 | fx_filter_env_trigger3 | Filter Env Trigger 3 | choice | 0 .. 11 | default 0 | step 1 |  | auto | Off,BD,SD,LT,MT,HT,RS,CP,CH,OH,CR,RD
+535 | fx_filter_mod_amount | Filter Mod Amount | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+536 | fx_filter_mix | Filter Mix | float | 0 .. 1 | default 1 | step 0 |  | auto | n.25 0.25 n.5 0.5
+537 | master_volume | Master Volume | float | -60 .. 12 | default 0 | step 0.00999999978 | dB | auto | n.25 -42 n.5 -24
+538 | output_stage | Output Stage | choice | 0 .. 2 | default 1 | step 1 |  | auto | Off,Modern,Original
+539 | master_drive | Master Drive | float | 0 .. 1 | default 0 | step 0 |  | auto | n.25 0.25 n.5 0.5
+540 | mcomp_on | Multiband Comp On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+541 | mcomp_xlow | Multiband Comp Low X | float | 40 .. 1000 | default 200 | step 0.100000001 | Hz | auto | n.25 89.4000015 n.5 200
+542 | mcomp_xhigh | Multiband Comp High X | float | 1000 .. 12000 | default 3000 | step 10 | Hz | auto | n.25 1860 n.5 3460
+543 | mcomp_low_on | Multiband Low On | bool | 0 .. 1 | default 1 | step 1 |  | auto
+544 | mcomp_low_solo | Multiband Low Solo | bool | 0 .. 1 | default 0 | step 1 |  | auto
+545 | mcomp_low_thresh | Multiband Low Threshold | float | -48 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+546 | mcomp_low_ratio | Multiband Low Ratio | float | 1 .. 20 | default 2 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+547 | mcomp_low_attack | Multiband Low Attack | float | 1 .. 500 | default 10 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+548 | mcomp_low_release | Multiband Low Release | float | 1 .. 500 | default 150 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+549 | mcomp_low_makeup | Multiband Low Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+550 | mcomp_mid_on | Multiband Mid On | bool | 0 .. 1 | default 1 | step 1 |  | auto
+551 | mcomp_mid_solo | Multiband Mid Solo | bool | 0 .. 1 | default 0 | step 1 |  | auto
+552 | mcomp_mid_thresh | Multiband Mid Threshold | float | -48 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+553 | mcomp_mid_ratio | Multiband Mid Ratio | float | 1 .. 20 | default 2 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+554 | mcomp_mid_attack | Multiband Mid Attack | float | 1 .. 500 | default 10 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+555 | mcomp_mid_release | Multiband Mid Release | float | 1 .. 500 | default 150 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+556 | mcomp_mid_makeup | Multiband Mid Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+557 | mcomp_high_on | Multiband High On | bool | 0 .. 1 | default 1 | step 1 |  | auto
+558 | mcomp_high_solo | Multiband High Solo | bool | 0 .. 1 | default 0 | step 1 |  | auto
+559 | mcomp_high_thresh | Multiband High Threshold | float | -48 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -36 n.5 -24
+560 | mcomp_high_ratio | Multiband High Ratio | float | 1 .. 20 | default 2 | step 0.00999999978 | :1 | auto | n.25 5.75 n.5 10.5
+561 | mcomp_high_attack | Multiband High Attack | float | 1 .. 500 | default 10 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+562 | mcomp_high_release | Multiband High Release | float | 1 .. 500 | default 150 | step 0.00999999978 | ms | auto | n.25 4.73000002 n.5 22.3600006
+563 | mcomp_high_makeup | Multiband High Makeup | float | 0 .. 24 | default 0 | step 0.00999999978 | dB | auto | n.25 6 n.5 12
+564 | limiter | Limiter | bool | 0 .. 1 | default 1 | step 1 |  | auto
+565 | lim_thresh | Limiter Threshold | float | -24 .. 0 | default 0 | step 0.00999999978 | dB | auto | n.25 -18 n.5 -12
+566 | lim_attack | Limiter Attack | float | 0.100000001 .. 10 | default 1 | step 0.00100000005 | ms | auto | n.25 0.316000015 n.5 1
+567 | lim_release | Limiter Release | float | 10 .. 1000 | default 100 | step 0.100000001 | ms | auto | n.25 31.6000004 n.5 100
+568 | soft_clip | Soft Clip | bool | 0 .. 1 | default 1 | step 1 |  | auto
+569 | trig1_on | Trigger 1 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+570 | trig1_source | Trigger 1 Source | choice | 0 .. 10 | default 5 | step 1 |  | auto | BD,SD,LT,MT,HT,RS,CP,CH,OH,CR,RD
+571 | trig1_route | Trigger 1 Route | choice | 0 .. 2 | default 0 | step 1 |  | auto | Output,FX 1,FX 2
+572 | trig1_out | Trigger 1 Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+573 | trig1_pan | Trigger 1 Pan | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+574 | trig1_level | Trigger 1 Level | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+575 | trig2_on | Trigger 2 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+576 | trig2_source | Trigger 2 Source | choice | 0 .. 10 | default 5 | step 1 |  | auto | BD,SD,LT,MT,HT,RS,CP,CH,OH,CR,RD
+577 | trig2_route | Trigger 2 Route | choice | 0 .. 2 | default 0 | step 1 |  | auto | Output,FX 1,FX 2
+578 | trig2_out | Trigger 2 Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+579 | trig2_pan | Trigger 2 Pan | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+580 | trig2_level | Trigger 2 Level | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+581 | trig3_on | Trigger 3 On | bool | 0 .. 1 | default 0 | step 1 |  | auto
+582 | trig3_source | Trigger 3 Source | choice | 0 .. 10 | default 5 | step 1 |  | auto | BD,SD,LT,MT,HT,RS,CP,CH,OH,CR,RD
+583 | trig3_route | Trigger 3 Route | choice | 0 .. 2 | default 0 | step 1 |  | auto | Output,FX 1,FX 2
+584 | trig3_out | Trigger 3 Output | choice | 0 .. 15 | default 0 | step 1 |  | auto | Main,Out 2,Out 3,Out 4,Out 5,Out 6,Out 7,Out 8,Out 9,Out 10,Out 11,Out 12,Out 13,Out 14,Out 15,Out 16
+585 | trig3_pan | Trigger 3 Pan | float | -1 .. 1 | default 0 | step 0 |  | auto | n.25 -0.5 n.5 0
+586 | trig3_level | Trigger 3 Level | float | 0 .. 1 | default 0.5 | step 0 |  | auto | n.25 0.25 n.5 0.5
+587 | total_accent | Total Accent | float | 0 .. 1 | default 0.699999988 | step 0 |  | auto | n.25 0.25 n.5 0.5
+588 | hat_choke | Hat Choke | bool | 0 .. 1 | default 1 | step 1 |  | auto
+589 | quality | Quality | choice | 0 .. 2 | default 1 | step 1 |  | not-auto | Eco,Standard,High
+590 | variance | Analog Variance | float | 0 .. 1 | default 0 | step 0 |  | not-auto | n.25 0.25 n.5 0.5
+591 | revision | Unit Revision | choice | 0 .. 1 | default 0 | step 1 |  | not-auto | Late,Early
+592 | seq_mode | Sequencer Mode | choice | 0 .. 3 | default 1 | step 1 |  | auto | Off,Host Sync,Internal,Host Note
+593 | seq_run | Run | bool | 0 .. 1 | default 0 | step 1 |  | auto
+594 | tempo | Tempo | float | 20 .. 400 | default 120 | step 0.100000001 | BPM | auto | n.25 115 n.5 210
+595 | swing_scale | Shuffle Depth | float | 0 .. 1 | default 1 | step 0 |  | auto | n.25 0.25 n.5 0.5
+596 | variation | Variation | choice | 0 .. 2 | default 0 | step 1 |  | auto | A,AB,B
+597 | auto_fill | Auto Fill | choice | 0 .. 5 | default 0 | step 1 |  | auto | Manual,16,12,8,4,2
+598 | fill_slot | Fill Pattern | choice | 0 .. 15 | default 15 | step 1 |  | auto | 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+599 | play_mode | Play Mode | choice | 0 .. 2 | default 0 | step 1 |  | auto | Pattern,Chain,Track
+600 | song_track | Track | choice | 0 .. 7 | default 0 | step 1 |  | auto | I-1,I-2,I-3,I-4,II-1,II-2,II-3,II-4
+601 | record | Tap Write | bool | 0 .. 1 | default 0 | step 1 |  | auto
+602 | jitter | Timing Jitter | bool | 0 .. 1 | default 0 | step 1 |  | auto
+603 | velocity_sens | Velocity Sensitive | bool | 0 .. 1 | default 1 | step 1 |  | auto
+604 | midi_channel | MIDI Channel | choice | 0 .. 16 | default 0 | step 1 |  | auto | Omni,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+605 | bass_channel | Bass Channel | choice | 0 .. 16 | default 0 | step 1 |  | auto | Off,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+606 | midi_out | MIDI Out | bool | 0 .. 1 | default 0 | step 1 |  | auto
+607 | midi_out_channel | MIDI Out Channel | choice | 0 .. 15 | default 9 | step 1 |  | auto | 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16

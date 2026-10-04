@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# mw909 — classic hybrid drum machine emulation. Copyright (C) 2026 mwAudio.
+#
+# Golden pattern: every voice and every step feature of the extended
+# sequencer: weak steps, sub-steps with a level ramp, flams with a quiet grace
+# hit (flam key 3 = 28 ms), probability, per-track length (polymeter) and
+# shuffle, the TOTAL ACCENT row, and a B variation.
+tempo    132
+pattern  I-1-1
+name     golden full
+length   16
+scale    16
+shuffle  6
+flamkey  3
+flamgrace 60
+substeps 100 40
+tracklength RS 5
+tracklength CR 12
+trackshuffle CH 10
+variation A
+BD  X--- o-x- x(f)--- x-o-
+SD  ---- X--- --o- x(3)---
+LT  ---- ---- ---- x(f)-x-
+MT  ---- ---- --x- ----
+HT  ---- ---- x--- ----
+RS  x-x(p3)--
+CP  ---- x(2)--- ---- X---
+CH  x-x- x-x(4)- x-x- x-x-
+OH  --x- ---- --x- ----
+CR  x--- ---- ----
+RD  -x-x -x-x -x-x(p5) -x-x
+AC  x--- ---- x--- --x-
+variation B
+BD  X--- ---X ---- X---
+SD  ---- x(f)--- ---- X(4)---
+CH  xxxx xxxx xxxx xxxx
+AC  x--- x--- x--- x---
